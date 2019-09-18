@@ -4,7 +4,7 @@ module.exports = {
   appId: '',
   apiKey: '',
   rateLimit: 2,
-  recrawlAfter: 300,
+  schedule: 'at 12:00 am',
   startUrls: ['http://www.example.com'],
   actions: [
     {

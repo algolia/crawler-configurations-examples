@@ -3,7 +3,7 @@ module.exports = {
   appId: '',
   apiKey: '',
   rateLimit: 2,
-  recrawlAfter: 300,
+  schedule: 'at 3:00 pm',
   saveBackup: true,
   startUrls: ['http://www.example.com'],
   exclusionPatterns: ['http://www.example.com/junk/**'],

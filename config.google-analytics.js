@@ -5,7 +5,7 @@ module.exports = {
   apiKey: '',
   notifySlackHandle: '@mySlackUsername',
   rateLimit: 2,
-  recrawlAfter: 300,
+  schedule: 'at 3:00 pm',
   startUrls: ['http://www.example.com'],
   externalDataSources: [
     {

@@ -1,8 +1,8 @@
 module.exports = {
-  appId: '',
-  apiKey: '',
+  appId: 'YOUR_APP_ID',
+  apiKey: 'YOUR_API_KEY',
   rateLimit: 2,
-  recrawlAfter: 300,
+  schedule: 'every 1 day',
   startUrls: ['http://www.example.com'],
   externalDataSources: [
     {
