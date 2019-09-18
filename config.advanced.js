@@ -15,7 +15,6 @@ module.exports = {
     },
   },
   login: {
-    useCookies: true,
     fetchRequest: {
       url: `http://example.com/secure/login-with-post`,
       retries: 3,
