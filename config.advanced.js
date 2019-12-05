@@ -62,10 +62,10 @@ module.exports = {
           });
         };
 
-        $('p').forEach(i => {
+        $('p').each((i, elem) => {
           createRecord({
             objectID: `${url.pathname}-paragraph#${i + 1}`,
-            text: $(this).text(),
+            text: $(elem).text(),
           });
         });
 
