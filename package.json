@@ -1,0 +1,17 @@
+{
+  "name": "crawler-configurations-examples",
+  "version": "1.0.0",
+  "description": "Checkout these sample crawler configuration files",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/algolia/crawler-configurations-examples.git"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/algolia/crawler-configurations-examples#readme",
+  "devDependencies": {
+    "cheerio": "^1.0.0-rc.3"
+  }
+}
