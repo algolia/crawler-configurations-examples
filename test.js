@@ -14,17 +14,29 @@ function loadRecordExtractor(configFile) {
 }
 
 function test(recordExtractor) {
-  const paragPhrase = 'Hello World!';
-  const records = recordExtractor({
-    html: `<html><body><p>${paragPhrase}</p></body></html>`,
-  });
-
   const it = junit();
-  it(`has a record that contains phrase from paragraph`, () =>
+
+  it(`matches phrase from unique paragraph`, () => {
+    const paragPhrase = 'Hello World!';
+    const records = recordExtractor({
+      html: `<html><body><p>${paragPhrase}</p></body></html>`,
+    });
     it.eq(
       records.some(({ text }) => text.includes(paragPhrase)),
       true
-    ));
+    );
+  });
+
+  it(`matches phrase from second paragraph`, () => {
+    const paragPhrase = 'Hello World!';
+    const records = recordExtractor({
+      html: `<html><body><p>parag1</p><p>${paragPhrase}</p></body></html>`,
+    });
+    it.eq(
+      records.some(({ text }) => text.includes(paragPhrase)),
+      true
+    );
+  });
 
   return it.run();
 }
