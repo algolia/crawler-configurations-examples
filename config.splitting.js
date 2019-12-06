@@ -48,25 +48,34 @@ module.exports = {
       indexName: 'crawler-example',
       pathsToMatch: ['http://www.example.com/**'],
       recordExtractor: ({ $, url }) => {
+        const MAX_RECORD_LENGTH = 10000; // expressed in number of utf-8 characters
         const records = [];
 
         const title = $('h1').text();
         const description = $('meta[name="description"]').attr('content');
 
-        const createRecord = props => {
-          records.push({
-            title,
-            description,
-            path: url.pathname.split('/'),
-            ...props,
-          });
-        };
+        const createRecord = ({ text, part }) => ({
+          objectID: `${url.pathname} ${part}`,
+          path: url.pathname.split('/'),
+          title,
+          description,
+          text: text || '',
+        });
 
         $('p, li').each((i, elem) => {
-          createRecord({
-            objectID: `${url.pathname}-paragraph#${i + 1}`,
-            text: $(elem).text(),
-          });
+          // split long content into several records
+          let textToIndex = $(elem).text().trim();
+          while (textToIndex) {
+            const record = createRecord({
+              part: records.length,
+            });
+            const remainingLength = MAX_RECORD_LENGTH - JSON.stringify(record).length;
+            records.push({
+              ...record,
+              text: textToIndex.substr(0, remainingLength),
+            });
+            textToIndex = textToIndex.substr(remainingLength);
+          }
         });
 
         return records;
