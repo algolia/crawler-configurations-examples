@@ -52,7 +52,6 @@ function test(recordExtractor) {
   it.describe('page with 1 big paragraph', it => {
     const words = Array.from({ length: 9000 }, (...k) => `word${k}`);
     const records = recordExtractor({
-      // html: `<html><body>${words.map(word => `<p>${word}</p>`)}</body></html>`,
       html: `<html><body><p>${words.join(' ')}</p></body></html>`,
     });
 
@@ -71,6 +70,16 @@ function test(recordExtractor) {
     it(`fits 10KB per record`, () =>
       it.eq(
         records.some(record => JSON.stringify(record).length > 10000),
+        false
+      ));
+    
+    it(`matches all words`, () =>
+      it.eq(
+        words.some(word => {
+          const found = records.some(({ text }) => text.includes(word));
+          if (!found) console.warn(`⚠ "${word}" was not found in records`);
+          return !found;
+        }),
         false
       ));
   });
