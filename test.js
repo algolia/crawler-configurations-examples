@@ -72,7 +72,7 @@ function test(recordExtractor) {
         records.some(record => JSON.stringify(record).length > 10000),
         false
       ));
-    
+
     it(`matches all words`, () =>
       it.eq(
         words.some(word => {

@@ -64,17 +64,25 @@ module.exports = {
 
         $('p, li').each((i, elem) => {
           // split long content into several records
-          let textToIndex = $(elem).text().trim();
+          let textToIndex = $(elem)
+            .text()
+            .trim();
           while (textToIndex) {
             const record = createRecord({
               part: records.length,
             });
-            const remainingLength = MAX_RECORD_LENGTH - JSON.stringify(record).length;
+            const remainingLength =
+              MAX_RECORD_LENGTH - JSON.stringify(record).length;
+            // split the content between two words, unless the rest fits in a record
+            const splitPos =
+              textToIndex.length <= remainingLength
+                ? remainingLength
+                : textToIndex.lastIndexOf(' ', remainingLength) + 1;
             records.push({
               ...record,
-              text: textToIndex.substr(0, remainingLength),
+              text: textToIndex.substr(0, splitPos).trim(),
             });
-            textToIndex = textToIndex.substr(remainingLength);
+            textToIndex = textToIndex.substr(splitPos);
           }
         });
 
