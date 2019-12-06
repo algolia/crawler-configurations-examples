@@ -38,6 +38,17 @@ function test(recordExtractor) {
     );
   });
 
+  it(`matches phrase from list item`, () => {
+    const paragPhrase = 'Hello World!';
+    const records = recordExtractor({
+      html: `<html><body><ul><li>${paragPhrase}</li></ul></body></html>`,
+    });
+    it.eq(
+      records.some(({ text }) => text.includes(paragPhrase)),
+      true
+    );
+  });
+
   return it.run();
 }
 
