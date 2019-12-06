@@ -36,7 +36,7 @@ function test(recordExtractor) {
       ));
   });
 
-  it.describe('page with 2 small paragraphs', it => {
+  it.describe('page with list', it => {
     const phrase = 'Hello World!';
     const records = recordExtractor({
       html: `<html><body><ul><li>${phrase}</li></ul></body></html>`,
