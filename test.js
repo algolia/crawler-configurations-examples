@@ -16,37 +16,37 @@ function loadRecordExtractor(configFile) {
 function test(recordExtractor) {
   const it = junit();
 
-  it(`matches phrase from unique paragraph`, () => {
-    const paragPhrase = 'Hello World!';
+  it.describe('page with 2 small paragraphs', it => {
+    const phrase1 = 'phrase1';
+    const phrase2 = 'phrase2';
     const records = recordExtractor({
-      html: `<html><body><p>${paragPhrase}</p></body></html>`,
+      html: `<html><body><p>${phrase1}</p><p>${phrase2}</p></body></html>`,
     });
-    return it.eq(
-      records.some(({ text }) => text.includes(paragPhrase)),
-      true
-    );
+
+    it(`matches phrase from unique paragraph`, () =>
+      it.eq(
+        records.some(({ text }) => text.includes(phrase1)),
+        true
+      ));
+
+    it(`matches phrase from second paragraph`, () =>
+      it.eq(
+        records.some(({ text }) => text.includes(phrase2)),
+        true
+      ));
   });
 
-  it(`matches phrase from second paragraph`, () => {
-    const paragPhrase = 'Hello World!';
+  it.describe('page with 2 small paragraphs', it => {
+    const phrase = 'Hello World!';
     const records = recordExtractor({
-      html: `<html><body><p>parag1</p><p>${paragPhrase}</p></body></html>`,
+      html: `<html><body><ul><li>${phrase}</li></ul></body></html>`,
     });
-    return it.eq(
-      records.some(({ text }) => text.includes(paragPhrase)),
-      true
-    );
-  });
 
-  it(`matches phrase from list item`, () => {
-    const paragPhrase = 'Hello World!';
-    const records = recordExtractor({
-      html: `<html><body><ul><li>${paragPhrase}</li></ul></body></html>`,
-    });
-    return it.eq(
-      records.some(({ text }) => text.includes(paragPhrase)),
-      true
-    );
+    it(`matches phrase from list item`, () =>
+      it.eq(
+        records.some(({ text }) => text.includes(phrase)),
+        true
+      ));
   });
 
   return it.run();
