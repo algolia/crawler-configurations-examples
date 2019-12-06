@@ -49,6 +49,31 @@ function test(recordExtractor) {
       ));
   });
 
+  it.describe('paragraph with words separated by an element', it => {
+    const words = 'Hello World!'.split(' ');
+    const records = recordExtractor({
+      html: `<html><body><p>${words.join('<br/>')}</p></body></html>`,
+    });
+
+    it(`matches the first word`, () =>
+      it.eq(
+        records.some(({ text }) => text.includes(words[0])),
+        true
+      ));
+
+    it(`matches the second word`, () =>
+      it.eq(
+        records.some(({ text }) => text.includes(words[1])),
+        true
+      ));
+
+    it(`does not match the concatenation of words`, () =>
+      it.eq(
+        records.some(({ text }) => text.includes(words[0] + words[1])),
+        false
+      ));
+  });
+
   it.describe('page with 1 big paragraph', it => {
     const words = Array.from({ length: 9000 }, (...k) => `word${k}`);
     const records = recordExtractor({
