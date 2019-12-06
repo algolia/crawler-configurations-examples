@@ -10,7 +10,7 @@ Make sure you have Node.js installed, then run the following commands:
 
 ```sh
 $ npm install
-$ npm test config.advanced.js
+$ npm test config.splitting.js
 ```
 
 ## License
