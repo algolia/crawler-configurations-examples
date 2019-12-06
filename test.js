@@ -49,6 +49,32 @@ function test(recordExtractor) {
       ));
   });
 
+  it.describe('page with 1 big paragraph', it => {
+    const words = Array.from({ length: 9000 }, (...k) => `word${k}`);
+    const records = recordExtractor({
+      // html: `<html><body>${words.map(word => `<p>${word}</p>`)}</body></html>`,
+      html: `<html><body><p>${words.join(' ')}</p></body></html>`,
+    });
+
+    it(`matches first word`, () =>
+      it.eq(
+        records.some(({ text }) => text.includes(words[0])),
+        true
+      ));
+
+    it(`matches last word`, () =>
+      it.eq(
+        records.some(({ text }) => text.includes(words[words.length - 1])),
+        true
+      ));
+
+    it(`fits 10KB per record`, () =>
+      it.eq(
+        records.some(record => JSON.stringify(record).length > 10000),
+        false
+      ));
+  });
+
   return it.run();
 }
 
