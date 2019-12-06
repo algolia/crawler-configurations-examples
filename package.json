@@ -12,7 +12,8 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/algolia/crawler-configurations-examples#readme",
   "devDependencies": {
-    "cheerio": "^1.0.0-rc.3"
+    "cheerio": "^1.0.0-rc.3",
+    "junit": "^1.4.9"
   },
   "prettier": {
     "trailingComma": "es5",
