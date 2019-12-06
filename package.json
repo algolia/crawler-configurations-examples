@@ -13,5 +13,11 @@
   "homepage": "https://github.com/algolia/crawler-configurations-examples#readme",
   "devDependencies": {
     "cheerio": "^1.0.0-rc.3"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true
   }
 }
