@@ -21,7 +21,7 @@ function test(recordExtractor) {
     const records = recordExtractor({
       html: `<html><body><p>${paragPhrase}</p></body></html>`,
     });
-    it.eq(
+    return it.eq(
       records.some(({ text }) => text.includes(paragPhrase)),
       true
     );
@@ -32,7 +32,7 @@ function test(recordExtractor) {
     const records = recordExtractor({
       html: `<html><body><p>parag1</p><p>${paragPhrase}</p></body></html>`,
     });
-    it.eq(
+    return it.eq(
       records.some(({ text }) => text.includes(paragPhrase)),
       true
     );
@@ -43,7 +43,7 @@ function test(recordExtractor) {
     const records = recordExtractor({
       html: `<html><body><ul><li>${paragPhrase}</li></ul></body></html>`,
     });
-    it.eq(
+    return it.eq(
       records.some(({ text }) => text.includes(paragPhrase)),
       true
     );
