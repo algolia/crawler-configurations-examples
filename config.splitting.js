@@ -72,15 +72,6 @@ module.exports = {
           text,
         });
 
-        const recordsAccu = (() => {
-          const records = [];
-          return {
-            add: records.push.bind(records),
-            getNextIndex: () => records.length,
-            getAll: () => records,
-          };
-        })();
-
         const splitToFitRecord = (text, baseRecord) => {
           const availableLength =
             MAX_RECORD_LENGTH - JSON.stringify(baseRecord).length;
@@ -97,18 +88,20 @@ module.exports = {
 
         // Content extraction and splitting logic
 
+        const records = [];
+
         forEachTextElement(({ text: textToIndex }) => {
           while (textToIndex) {
             const baseRecord = createRecord({
-              part: recordsAccu.getNextIndex(),
+              part: records.length, // the index of the next item will be used in the objectID
             });
             const { text, rest } = splitToFitRecord(textToIndex, baseRecord);
-            recordsAccu.add({ ...baseRecord, text });
+            records.push({ ...baseRecord, text });
             textToIndex = rest;
           }
         });
 
-        return recordsAccu.getAll();
+        return records;
       },
     },
   ],
