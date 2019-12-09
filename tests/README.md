@@ -2,7 +2,7 @@
 
 These scripts are reserved for Algolia employees.
 
-## How to test a configuration
+## How to test the 'config.splitting' configuration
 
 Make sure you have Node.js installed, then run the following commands:
 
