@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Checkout these sample crawler configuration files",
   "scripts": {
-    "test:html": "for file in $(find **/*.html); do node tests/test-on-html-file.js ${file}; done",
-    "test": "node tests/test.js"
+    "test:html": "for file in $(find **/*.html); do node test-on-html-file.js ${file}; done",
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",

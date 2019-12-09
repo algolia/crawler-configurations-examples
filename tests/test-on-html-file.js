@@ -6,7 +6,7 @@ const { loadRecordExtractor } = require('./loadRecordExtractor');
 const USAGE =
   '$ node test-on-html-file.js <name_of_page.html> [<name_of_config.js>]';
 
-const DEFAULT_CONFIG_FILE = 'config.splitting.js';
+const DEFAULT_CONFIG_FILE = '../config.splitting.js';
 
 function test(recordExtractor, htmlFile) {
   const it = junit();
