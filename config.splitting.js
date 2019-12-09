@@ -20,11 +20,13 @@ module.exports = {
     {
       recordExtractor: ({ $, url }) => {
         // Settings and other constants
+
         const MAX_RECORD_LENGTH = 10000; // expressed in number of utf-8 characters
         const TEXT_ELEMENTS = ['p', 'li'];
         const WORD_SEPARATOR = ' '; // character to separate words in records
 
         // Helpers
+
         const turnEmptyTagsAsSpaces = $elem =>
           $elem.children().each((i, child) => {
             if (!$(child).text()) $(child).text(WORD_SEPARATOR);
@@ -72,25 +74,30 @@ module.exports = {
           });
         })();
 
+        const splitToFitRecord = (text, baseRecord) => {
+          const availableLength =
+            MAX_RECORD_LENGTH - JSON.stringify(baseRecord).length;
+          // split the content between two words, unless the rest fits in a record
+          const splitPos =
+            text.length <= availableLength
+              ? availableLength
+              : text.lastIndexOf(WORD_SEPARATOR, availableLength) + 1;
+          return {
+            text: text.substr(0, splitPos).trim(),
+            rest: text.substr(splitPos),
+          };
+        };
+
+        // Content extraction and splitting logic
+
         pageParser.forEachTextElement(textToIndex => {
-          // split long content into several records
-          //let textToIndex = text;
           while (textToIndex) {
-            const record = pageIndexer.createRecord({
+            const baseRecord = pageIndexer.createRecord({
               part: recordsAccu.getNextIndex(),
             });
-            const remainingLength =
-              MAX_RECORD_LENGTH - JSON.stringify(record).length;
-            // split the content between two words, unless the rest fits in a record
-            const splitPos =
-              textToIndex.length <= remainingLength
-                ? remainingLength
-                : textToIndex.lastIndexOf(WORD_SEPARATOR, remainingLength) + 1;
-            recordsAccu.add({
-              ...record,
-              text: textToIndex.substr(0, splitPos).trim(),
-            });
-            textToIndex = textToIndex.substr(splitPos);
+            const { text, rest } = splitToFitRecord(textToIndex, baseRecord);
+            recordsAccu.add({ ...baseRecord, text });
+            textToIndex = rest;
           }
         });
 
