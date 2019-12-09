@@ -25,54 +25,40 @@ module.exports = {
         const TEXT_ELEMENTS = ['p', 'li'];
         const WORD_SEPARATOR = ' '; // character to separate words in records
 
-        // Helpers
+        // Page metadata
+
+        const pageMeta = {
+          title: $('h1').text(),
+          description: $('meta[name="description"]').attr('content'),
+        };
+
+        // Content Extraction helpers
 
         const turnEmptyTagsAsSpaces = $elem =>
           $elem.children().each((i, child) => {
             if (!$(child).text()) $(child).text(WORD_SEPARATOR);
           });
 
-        const recordsAccu = new (class RecordsAccumulator {
-          records = [];
-          add(...records) {
-            this.records.push(...records);
-          }
-          getNextIndex() {
-            return this.records.length;
-          }
-          getAll() {
-            return this.records;
-          }
-        })();
-
-        const pageParser = new (class PageParser {
-          getMeta = () => ({
-            title: $('h1').text(),
-            description: $('meta[name="description"]').attr('content'),
+        const forEachTextElement = fct =>
+          $(TEXT_ELEMENTS.join(', ')).each((i, elem) => {
+            const $elem = $(elem);
+            turnEmptyTagsAsSpaces($elem);
+            // de-duplicate whitespace (i.e. space or line break) into word separators
+            const text = $elem
+              .text()
+              .trim()
+              .replace(/\s+/g, WORD_SEPARATOR);
+            fct(text);
           });
-          forEachTextElement(fct) {
-            $(TEXT_ELEMENTS.join(', ')).each((i, elem) => {
-              const $elem = $(elem);
-              turnEmptyTagsAsSpaces($elem);
-              // de-duplicate whitespace (i.e. space or line break) into word separators
-              const text = $elem
-                .text()
-                .trim()
-                .replace(/\s+/g, WORD_SEPARATOR);
-              fct(text);
-            });
-          }
-        })();
 
-        const pageIndexer = new (class PageIndexer {
-          pageMeta = pageParser.getMeta();
-          createRecord = ({ text, part }) => ({
-            objectID: `${url.pathname} ${part}`,
-            path: url.pathname.split('/'),
-            ...this.pageMeta,
-            text: text || '',
-          });
-        })();
+        // Indexing helpers
+
+        createRecord = ({ text, part }) => ({
+          objectID: `${url.pathname} ${part}`,
+          path: url.pathname.split('/'),
+          ...pageMeta,
+          text: text || '',
+        });
 
         const splitToFitRecord = (text, baseRecord) => {
           const availableLength =
@@ -88,11 +74,18 @@ module.exports = {
           };
         };
 
+        const recordsAccu = new (class RecordsAccumulator {
+          records = [];
+          add = (...records) => this.records.push(...records);
+          getNextIndex = () => this.records.length;
+          getAll = () => this.records;
+        })();
+
         // Content extraction and splitting logic
 
-        pageParser.forEachTextElement(textToIndex => {
+        forEachTextElement(textToIndex => {
           while (textToIndex) {
-            const baseRecord = pageIndexer.createRecord({
+            const baseRecord = createRecord({
               part: recordsAccu.getNextIndex(),
             });
             const { text, rest } = splitToFitRecord(textToIndex, baseRecord);
