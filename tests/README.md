@@ -9,6 +9,15 @@ Make sure you have Node.js installed, then run the following commands:
 ```sh
 $ cd tests
 $ npm install
-$ npm test ../config.splitting.js
-$ npm run test:html # to test config.splitting.js against real HTML files
+$ npm test
+```
+
+## How to test the 'config.splitting' configuration against real HTML files
+
+Copy HTML files in the `tests` directory, then run the following commands:
+
+```sh
+$ cd tests
+$ npm install
+$ npm run test:html
 ```
