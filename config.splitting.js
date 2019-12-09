@@ -60,11 +60,13 @@ module.exports = {
           text: text || '',
         });
 
-        const recordsAccu = new (class RecordsAccumulator {
-          records = [];
-          add = (...records) => this.records.push(...records);
-          getNextIndex = () => this.records.length;
-          getAll = () => this.records;
+        const recordsAccu = (() => {
+          const records = [];
+          return {
+            add: records.push.bind(records),
+            getNextIndex: () => records.length,
+            getAll: () => records,
+          };
         })();
 
         const splitToFitRecord = (text, baseRecord) => {
