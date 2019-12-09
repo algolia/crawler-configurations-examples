@@ -14,7 +14,19 @@
  * limitations under the License.
  */
 
-// This config can split long content into more than 1 record per resource.
+// This config can split long content into more than 1 record per resource, by:
+//
+// 1. extracting the textual content of p and li elements; (see TEXT_ELEMENTS)
+// 2. and splitting that content in as many records as needed, depending on the
+//    maximum record size allowed by your Algolia plan. (see MAX_RECORD_LENGTH)
+//
+// In order to make sure that every word of that content can be used to match
+// the page, the splitting will happen between words, and whitespace (including
+// line breaks) will be de-duplicated into single spaces. (see WORD_SEPARATOR)
+//
+// Feel free to change the page metadata (`pageMeta`) that will be included in
+// all resulting records, based on your needs.
+//
 module.exports = {
   actions: [
     {
