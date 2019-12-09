@@ -11,7 +11,7 @@ const DEFAULT_CONFIG_FILE = 'config.splitting.js';
 const DEFAULT_START_URL = 'http://www.example.com/';
 
 function loadRecordExtractor(configFile) {
-  const { startUrls, actions } = require(`./${configFile}`);
+  const { startUrls, actions } = require(`./../${configFile}`);
   const { recordExtractor } = actions[0];
   const defaultUrl = new URL((startUrls || [DEFAULT_START_URL])[0]);
   return ({ url = defaultUrl, title = 'Some page', html = '' }) =>
