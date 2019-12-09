@@ -28,7 +28,7 @@ module.exports = {
         // Page metadata
 
         const pageMeta = {
-          title: $('h1').text(),
+          title: $('title').text(),
           description: $('meta[name="description"]').attr('content'),
         };
 
@@ -60,6 +60,13 @@ module.exports = {
           text: text || '',
         });
 
+        const recordsAccu = new (class RecordsAccumulator {
+          records = [];
+          add = (...records) => this.records.push(...records);
+          getNextIndex = () => this.records.length;
+          getAll = () => this.records;
+        })();
+
         const splitToFitRecord = (text, baseRecord) => {
           const availableLength =
             MAX_RECORD_LENGTH - JSON.stringify(baseRecord).length;
@@ -73,13 +80,6 @@ module.exports = {
             rest: text.substr(splitPos),
           };
         };
-
-        const recordsAccu = new (class RecordsAccumulator {
-          records = [];
-          add = (...records) => this.records.push(...records);
-          getNextIndex = () => this.records.length;
-          getAll = () => this.records;
-        })();
 
         // Content extraction and splitting logic
 
