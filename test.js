@@ -109,6 +109,18 @@ function test(recordExtractor) {
       ));
   });
 
+  it.describe('page with a nested link', it => {
+    const records = recordExtractor({
+      html: `<html><body><p>one <a href="">two</a> three</p></body></html>`,
+    });
+
+    it(`matches title of <a> link`, () =>
+      it.eq(
+        records.some(({ text }) => text.includes('two')),
+        true
+      ));
+  });
+
   return it.run();
 }
 
