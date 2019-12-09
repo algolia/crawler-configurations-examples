@@ -21,7 +21,14 @@ module.exports = {
       recordExtractor: ({ $, url }) => {
         // Settings and other constants
         const MAX_RECORD_LENGTH = 10000; // expressed in number of utf-8 characters
+        const TEXT_ELEMENTS = ['p', 'li'];
         const WORD_SEPARATOR = ' '; // character to separate words in records
+
+        // Helpers
+        const turnEmptyTagsAsSpaces = $elem =>
+          $elem.children().each((i, child) => {
+            if (!$(child).text()) $(child).text(WORD_SEPARATOR);
+          });
 
         const recordsAccu = new (class RecordsAccumulator {
           records = [];
@@ -36,34 +43,38 @@ module.exports = {
           }
         })();
 
-        const pageIndexer = new (class PageIndexer {
-          pageAttributes = {
+        const pageParser = new (class PageParser {
+          getMeta = () => ({
             title: $('h1').text(),
             description: $('meta[name="description"]').attr('content'),
-          };
+          });
+          forEachTextElement(fct) {
+            $(TEXT_ELEMENTS.join(', ')).each((i, elem) => {
+              const $elem = $(elem);
+              turnEmptyTagsAsSpaces($elem);
+              // de-duplicate whitespace (i.e. space or line break) into word separators
+              const text = $elem
+                .text()
+                .trim()
+                .replace(/\s+/g, WORD_SEPARATOR);
+              fct(text);
+            });
+          }
+        })();
+
+        const pageIndexer = new (class PageIndexer {
+          pageMeta = pageParser.getMeta();
           createRecord = ({ text, part }) => ({
             objectID: `${url.pathname} ${part}`,
             path: url.pathname.split('/'),
-            ...this.pageAttributes,
+            ...this.pageMeta,
             text: text || '',
           });
         })();
 
-        const textTags = ['p', 'li'];
-        const turnEmptyTagsAsSpaces = elem =>
-          $(elem)
-            .children()
-            .each((i2, child) => {
-              if (!$(child).text()) $(child).text(WORD_SEPARATOR);
-            });
-
-        $(textTags.join(', ')).each((i, elem) => {
-          turnEmptyTagsAsSpaces(elem);
+        pageParser.forEachTextElement(textToIndex => {
           // split long content into several records
-          let textToIndex = $(elem)
-            .text()
-            .trim()
-            .replace(/\s+/g, WORD_SEPARATOR); // de-duplicate whitespace (i.e. space or line break) into word separators
+          //let textToIndex = text;
           while (textToIndex) {
             const record = pageIndexer.createRecord({
               part: recordsAccu.getNextIndex(),
