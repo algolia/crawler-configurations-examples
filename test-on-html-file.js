@@ -33,7 +33,7 @@ function test(recordExtractor, htmlFile) {
       words.push(
         ...$(elem)
           .text()
-          .split(' ')
+          .split(/\s+/) // split words by whitespace, i.e. space or line breaks
       )
     );
 
