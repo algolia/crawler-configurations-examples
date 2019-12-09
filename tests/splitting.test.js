@@ -131,11 +131,4 @@ function test(recordExtractor) {
 
 // start of actual script
 
-const configFile = process.argv[2];
-
-if (!configFile) {
-  console.error('usage: $ npm test <name_of_config.js>');
-  process.exit(1);
-}
-
-test(loadRecordExtractor(configFile));
+test(loadRecordExtractor('../config.splitting.js'));
