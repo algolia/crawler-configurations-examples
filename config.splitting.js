@@ -49,6 +49,7 @@ module.exports = {
       pathsToMatch: ['http://www.example.com/**'],
       recordExtractor: ({ $, url }) => {
         const MAX_RECORD_LENGTH = 10000; // expressed in number of utf-8 characters
+        const WORD_SEPARATOR = ' '; // character to separate words in records
         const records = [];
 
         const title = $('h1').text();
@@ -67,7 +68,7 @@ module.exports = {
           $(elem)
             .children()
             .each((i2, child) => {
-              if (!$(child).text()) $(child).text(' ');
+              if (!$(child).text()) $(child).text(WORD_SEPARATOR);
             });
 
         $(textTags.join(', ')).each((i, elem) => {
@@ -75,7 +76,8 @@ module.exports = {
           // split long content into several records
           let textToIndex = $(elem)
             .text()
-            .trim();
+            .trim()
+            .replace(/\s+/g, WORD_SEPARATOR); // de-duplicate whitespace (i.e. space or line break) into word separators
           while (textToIndex) {
             const record = createRecord({
               part: records.length,
@@ -86,7 +88,7 @@ module.exports = {
             const splitPos =
               textToIndex.length <= remainingLength
                 ? remainingLength
-                : textToIndex.lastIndexOf(' ', remainingLength) + 1;
+                : textToIndex.lastIndexOf(WORD_SEPARATOR, remainingLength) + 1;
             records.push({
               ...record,
               text: textToIndex.substr(0, splitPos).trim(),
