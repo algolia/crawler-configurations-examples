@@ -53,7 +53,7 @@ module.exports = {
 
         // Indexing helpers
 
-        createRecord = ({ text = '', part }) => ({
+        const createRecord = ({ text = '', part }) => ({
           objectID: `${url.pathname} ${part}`,
           path: url.pathname.split('/'),
           ...pageMeta,
