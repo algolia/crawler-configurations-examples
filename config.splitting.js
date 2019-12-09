@@ -63,17 +63,15 @@ module.exports = {
         });
 
         const textTags = ['p', 'li'];
-        const matchesTags = (elem, tags) =>
-          elem.name.match(new RegExp(textTags.join('|'), 'i'));
-        const turnOtherTagsAsSpaces = elem =>
+        const turnEmptyTagsAsSpaces = elem =>
           $(elem)
             .children()
             .each((i2, child) => {
-              if (!matchesTags(child, textTags)) $(child).text(' ');
+              if (!$(child).text()) $(child).text(' ');
             });
 
         $(textTags.join(', ')).each((i, elem) => {
-          turnOtherTagsAsSpaces(elem);
+          turnEmptyTagsAsSpaces(elem);
           // split long content into several records
           let textToIndex = $(elem)
             .text()
