@@ -34,7 +34,7 @@ module.exports = {
 
         // Content Extraction helpers
 
-        const turnEmptyTagsAsSpaces = $elem =>
+        const turnEmptyTagsToSeparators = $elem =>
           $elem.children().each((i, child) => {
             if (!$(child).text()) $(child).text(WORD_SEPARATOR);
           });
@@ -42,13 +42,13 @@ module.exports = {
         const forEachTextElement = fct =>
           $(TEXT_ELEMENTS.join(', ')).each((i, elem) => {
             const $elem = $(elem);
-            turnEmptyTagsAsSpaces($elem);
-            // de-duplicate whitespace (i.e. space or line break) into word separators
-            const text = $elem
-              .text()
-              .trim()
-              .replace(/\s+/g, WORD_SEPARATOR);
-            fct(text);
+            turnEmptyTagsToSeparators($elem);
+            fct({
+              text: $elem
+                .text()
+                .trim()
+                .replace(/\s+/g, WORD_SEPARATOR), // de-duplicate whitespace (i.e. space or line break) into word separators
+            });
           });
 
         // Indexing helpers
@@ -83,7 +83,7 @@ module.exports = {
 
         // Content extraction and splitting logic
 
-        forEachTextElement(textToIndex => {
+        forEachTextElement(({ text: textToIndex }) => {
           while (textToIndex) {
             const baseRecord = createRecord({
               part: recordsAccu.getNextIndex(),
