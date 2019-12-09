@@ -19,20 +19,35 @@ module.exports = {
   actions: [
     {
       recordExtractor: ({ $, url }) => {
+        // Settings and other constants
         const MAX_RECORD_LENGTH = 10000; // expressed in number of utf-8 characters
         const WORD_SEPARATOR = ' '; // character to separate words in records
-        const records = [];
 
-        const title = $('h1').text();
-        const description = $('meta[name="description"]').attr('content');
+        const recordsAccu = new (class RecordsAccumulator {
+          records = [];
+          add(...records) {
+            this.records.push(...records);
+          }
+          getNextIndex() {
+            return this.records.length;
+          }
+          getAll() {
+            return this.records;
+          }
+        })();
 
-        const createRecord = ({ text, part }) => ({
-          objectID: `${url.pathname} ${part}`,
-          path: url.pathname.split('/'),
-          title,
-          description,
-          text: text || '',
-        });
+        const pageIndexer = new (class PageIndexer {
+          pageAttributes = {
+            title: $('h1').text(),
+            description: $('meta[name="description"]').attr('content'),
+          };
+          createRecord = ({ text, part }) => ({
+            objectID: `${url.pathname} ${part}`,
+            path: url.pathname.split('/'),
+            ...this.pageAttributes,
+            text: text || '',
+          });
+        })();
 
         const textTags = ['p', 'li'];
         const turnEmptyTagsAsSpaces = elem =>
@@ -50,8 +65,8 @@ module.exports = {
             .trim()
             .replace(/\s+/g, WORD_SEPARATOR); // de-duplicate whitespace (i.e. space or line break) into word separators
           while (textToIndex) {
-            const record = createRecord({
-              part: records.length,
+            const record = pageIndexer.createRecord({
+              part: recordsAccu.getNextIndex(),
             });
             const remainingLength =
               MAX_RECORD_LENGTH - JSON.stringify(record).length;
@@ -60,7 +75,7 @@ module.exports = {
               textToIndex.length <= remainingLength
                 ? remainingLength
                 : textToIndex.lastIndexOf(WORD_SEPARATOR, remainingLength) + 1;
-            records.push({
+            recordsAccu.add({
               ...record,
               text: textToIndex.substr(0, splitPos).trim(),
             });
@@ -68,7 +83,7 @@ module.exports = {
           }
         });
 
-        return records;
+        return recordsAccu.getAll();
       },
     },
   ],
