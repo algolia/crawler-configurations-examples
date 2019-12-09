@@ -127,6 +127,17 @@ function test(recordExtractor) {
       ));
   });
 
+  it.describe('page with extra whitespace', it => {
+    const records = recordExtractor({
+      html: `<html><body><p>  one\ntwo \r\nthree</p></body></html>`,
+    });
+
+    it(`indexes one record`, () => it.eq(records.length, 1));
+
+    it(`indexes words without extra whitespace`, () =>
+      it.eq(records[0].text, 'one two three'));
+  });
+
   return it.run();
 }
 
