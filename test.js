@@ -2,10 +2,13 @@ const { URL } = require('url');
 const cheerio = require('cheerio');
 const junit = require('junit');
 
+const DEFAULT_START_URL = 'http://www.example.com/';
+
 function loadRecordExtractor(configFile) {
   const { startUrls, actions } = require(`./${configFile}`);
   const { recordExtractor } = actions[0];
-  return ({ url = new URL(startUrls[0]), title = 'Some page', html = '' }) =>
+  const defaultUrl = new URL((startUrls || [DEFAULT_START_URL])[0]);
+  return ({ url = defaultUrl, title = 'Some page', html = '' }) =>
     recordExtractor({
       url,
       title,

@@ -14,39 +14,10 @@
  * limitations under the License.
  */
 
-// This config represent everything (almost) that is possible with the crawler
+// This config can split long content into more than 1 record per resource.
 module.exports = {
-  appId: '',
-  apiKey: '',
-  rateLimit: 2,
-  schedule: 'at 3:00 pm',
-  saveBackup: true,
-  startUrls: ['http://www.example.com'],
-  exclusionPatterns: ['http://www.example.com/junk/**'],
-  ignoreQueryParams: ['ref'],
-  requestOptions: {
-    proxy: 'http://login:pwd@221.221.221.221:3219',
-    headers: {
-      Authorization: 'basic dGVzdDpjcmVkZW50aWFscw==',
-    },
-  },
-  login: {
-    fetchRequest: {
-      url: `http://example.com/secure/login-with-post`,
-      retries: 3,
-      requestOptions: {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'id=my-id&password=my-password',
-        followRedirect: false,
-        timeout: 5000, // in milliseconds
-      },
-    },
-  },
   actions: [
     {
-      indexName: 'crawler-example',
-      pathsToMatch: ['http://www.example.com/**'],
       recordExtractor: ({ $, url }) => {
         const MAX_RECORD_LENGTH = 10000; // expressed in number of utf-8 characters
         const WORD_SEPARATOR = ' '; // character to separate words in records
