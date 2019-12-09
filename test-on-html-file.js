@@ -77,7 +77,7 @@ function test(recordExtractor, htmlFile) {
 const htmlFile = process.argv[2];
 const configFile = process.argv[3] || DEFAULT_CONFIG_FILE;
 
-if (!configFile) {
+if (!htmlFile) {
   console.error(`usage: ${USAGE}`);
   process.exit(1);
 }
