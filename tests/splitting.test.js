@@ -126,6 +126,29 @@ function test(recordExtractor) {
       it.eq(records[0].text, 'one two three'));
   });
 
+  it.describe('page with characters that need escaping', it => {
+    const words = Array.from({ length: 9000 }, (...k) => `"word${k}"`); // each word is surrounded by double quotes. each will be stored as two characters. (\")
+    const records = recordExtractor({
+      html: `<html><body><p>${words.join(' ')}</p></body></html>`,
+    });
+
+    it(`matches all words`, () =>
+      it.eq(
+        words.some(word => {
+          const found = records.some(({ text }) => text.includes(word));
+          if (!found) console.warn(`⚠ "${word}" was not found in records`);
+          return !found;
+        }),
+        false
+      ));
+
+    it(`fits 10KB per record`, () =>
+      it.eq(
+        records.some(record => JSON.stringify(record).length > 10000),
+        false
+      ));
+  });
+
   return it.run();
 }
 
