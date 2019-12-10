@@ -8,6 +8,17 @@ const USAGE =
 
 const DEFAULT_CONFIG_FILE = '../config.splitting.js';
 
+const addSeparatorsBetweenChildElements = ($elem, $) => {
+  const $childNodes = $elem.children();
+  if ($childNodes.length === 0) {
+    $elem.text(($elem.text() || '') + ' ');
+  } else {
+    $childNodes.each(
+      (i, child) => addSeparatorsBetweenChildElements($(child), $) // recurse through the DOM tree, depth first
+    );
+  }
+};
+
 function test(recordExtractor, htmlFile) {
   const it = junit();
 
@@ -18,13 +29,9 @@ function test(recordExtractor, htmlFile) {
 
     const words = [];
     const $ = cheerio.load(html);
-    $('p, li').each((i, elem) =>
-      words.push(
-        ...$(elem)
-          .text()
-          .split(/\s+/) // split words by whitespace, i.e. space or line breaks
-      )
-    );
+    const $body = $('body');
+    addSeparatorsBetweenChildElements($body, $);
+    words.push(...$body.text().split(/\s+/)); // split words by whitespace, i.e. space or line breaks
 
     it(`matches first word`, () =>
       it.eq(
