@@ -48,15 +48,21 @@ module.exports = {
 
         // Content Extraction helpers
 
-        const turnEmptyTagsToSeparators = $elem =>
-          $elem.children().each((i, child) => {
-            if (!$(child).text()) $(child).text(WORD_SEPARATOR);
-          });
+        const addSeparatorsBetweenChildElements = $elem => {
+          const $childNodes = $elem.children();
+          if ($childNodes.length === 0) {
+            $elem.text(($elem.text() || '') + WORD_SEPARATOR);
+          } else {
+            $childNodes.each(
+              (i, child) => addSeparatorsBetweenChildElements($(child)) // recurse through the DOM tree, depth first
+            );
+          }
+        };
 
         const forEachTextElement = fct =>
           $(TEXT_ELEMENTS.join(', ')).each((i, elem) => {
             const $elem = $(elem);
-            turnEmptyTagsToSeparators($elem);
+            addSeparatorsBetweenChildElements($elem);
             fct({
               text: $elem
                 .text()
