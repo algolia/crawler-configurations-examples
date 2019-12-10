@@ -79,17 +79,22 @@ module.exports = {
           text,
         });
 
+        const serializeString = str => JSON.stringify(str).slice(1, -1); // remove surrounding quotes
+
+        const deserializeString = str => JSON.parse(`"${str}"`); // re-add surrounding quotes
+
         const splitToFitRecord = (text, baseRecord) => {
           const availableLength =
             MAX_RECORD_LENGTH - JSON.stringify(baseRecord).length;
+          const serializedText = serializeString(text); // needed to estimate the weight of that string, as it's gonna be stored in the Algolia record
           // split the content between two words, unless the rest fits in a record
           const splitPos =
-            text.length <= availableLength
+            serializedText.length <= availableLength
               ? availableLength
-              : text.lastIndexOf(WORD_SEPARATOR, availableLength) + 1;
+              : serializedText.lastIndexOf(WORD_SEPARATOR, availableLength) + 1;
           return {
-            text: text.substr(0, splitPos).trim(),
-            rest: text.substr(splitPos),
+            text: deserializeString(serializedText.substr(0, splitPos)).trim(),
+            rest: deserializeString(serializedText.substr(splitPos)),
           };
         };
 
