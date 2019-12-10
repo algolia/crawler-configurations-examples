@@ -8,6 +8,7 @@ const USAGE =
 
 const DEFAULT_CONFIG_FILE = '../config.splitting.js';
 
+// adapted from config.splitting.js
 const addSeparatorsBetweenChildElements = ($elem, $) => {
   const $childNodes = $elem.children();
   if ($childNodes.length === 0) {
@@ -19,19 +20,22 @@ const addSeparatorsBetweenChildElements = ($elem, $) => {
   }
 };
 
+function extractWordsFrom(html) {
+  const $ = cheerio.load(html);
+  const $body = $('body');
+  addSeparatorsBetweenChildElements($body, $); // necessary to turn inline tags (e.g. <br/>) into spaces
+  return $body.text().split(/\s+/);
+}
+
 function test(recordExtractor, htmlFile) {
   const it = junit();
 
   it.describe(htmlFile, it => {
     const html = fs.readFileSync(htmlFile);
+    const words = extractWordsFrom(html); // split words by whitespace, i.e. space or line breaks
+    console.warn('ℹ number of words extracted:', words.length);
     const records = recordExtractor({ html });
-    console.warn('ℹ number of records read from HTML file:', records.length);
-
-    const words = [];
-    const $ = cheerio.load(html);
-    const $body = $('body');
-    addSeparatorsBetweenChildElements($body, $);
-    words.push(...$body.text().split(/\s+/)); // split words by whitespace, i.e. space or line breaks
+    console.warn('ℹ number of records extracted:', records.length);
 
     it(`matches first word`, () =>
       it.eq(
