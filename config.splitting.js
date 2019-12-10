@@ -16,9 +16,10 @@
 
 // This config can split long content into more than 1 record per resource, by:
 //
-// 1. extracting the textual content of p and li elements; (see TEXT_ELEMENTS)
-// 2. and splitting that content in as many records as needed, depending on the
-//    maximum record size allowed by your Algolia plan. (see MAX_RECORD_LENGTH)
+// 1. extracting the text from a given list of elements; (see TEXT_ELEMENTS)
+// 2. and, if needed, splitting the textual content of each matching element
+//    into more than one record, depending on the maximum record size allowed
+//    by your Algolia plan. (see MAX_RECORD_LENGTH)
 //
 // In order to make sure that every word of that content can be used to match
 // the page, the splitting will happen between words, and whitespace (including
@@ -34,7 +35,7 @@ module.exports = {
         // Settings and other constants
 
         const MAX_RECORD_LENGTH = 10000; // expressed in number of utf-8 characters
-        const TEXT_ELEMENTS = ['p', 'li'];
+        const TEXT_ELEMENTS = ['body']; // selectors of elements to be indexed as Algolia records
         const WORD_SEPARATOR = ' '; // character to separate words in records
 
         // Page metadata
