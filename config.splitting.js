@@ -40,6 +40,7 @@ module.exports = {
         // Page metadata
 
         const pageMeta = {
+          path: url.pathname.split('/'),
           title: $('title').text(),
           description: $('meta[name="description"]').attr('content'),
         };
@@ -67,7 +68,6 @@ module.exports = {
 
         const createRecord = ({ text = '', part }) => ({
           objectID: `${url.pathname} ${part}`,
-          path: url.pathname.split('/'),
           ...pageMeta,
           text,
         });
