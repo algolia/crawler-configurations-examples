@@ -89,8 +89,16 @@ module.exports = {
         const splitToFitRecord = (text, baseRecord) => {
           const availableLength =
             MAX_RECORD_LENGTH - JSON.stringify(baseRecord).length;
-          const serializedText = serializeString(text); // needed to estimate the weight of that string, as it's gonna be stored in the Algolia record
-          // split the content between two words, unless the rest fits in a record
+          const serializedText = serializeString(text);
+          // 👆 We JSON-serialiaze the string to estimate its actual weight as
+          // it's gonna be stored in an Algolia record, to enforce size limit.
+          //
+          // I.e. A paragraph that contains 100 double-quote characters will
+          // actually weight 200 characters, because records are JSON-encoded
+          // when sent to Algolia, which implies that double quotes are encoded
+          // using two characters. (\")
+          //
+          // Now, split the text between words unless the rest fits in a record
           const splitPos =
             serializedText.length <= availableLength
               ? availableLength
