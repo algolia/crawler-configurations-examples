@@ -1,6 +1,6 @@
 # crawler-configurations-examples
 
-Checkout these sample crawler configuration files
+This repository contains sample configuration files for [Algolia Crawler](https://www.algolia.com/products/crawler/)
 
 ## License
 
