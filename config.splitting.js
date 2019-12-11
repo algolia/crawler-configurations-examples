@@ -34,9 +34,12 @@ module.exports = {
       recordExtractor: ({ $, url }) => {
         // Settings and other constants
 
+        const WORD_SEPARATOR = ' '; // character to separate words in records
         const MAX_RECORD_LENGTH = 10000; // expressed in number of utf-8 characters
         const TEXT_ELEMENTS = ['body']; // selectors of elements to be indexed as Algolia records
-        const WORD_SEPARATOR = ' '; // character to separate words in records
+        // 👆 Here we are taking the whole document, but you could use any other
+        // selector that will split your content, like 'p', 'i', or even '.page'
+        // if your document has some pages sections.
 
         // Page metadata
 
