@@ -63,7 +63,7 @@ function test(recordExtractor) {
   });
 
   it.describe('page with 1 big paragraph', it => {
-    const words = Array.from({ length: 9000 }, (...k) => `word${k}`);
+    const words = Array.from({ length: 9000 }, (_v, k) => `word${k}`);
     const records = recordExtractor({
       html: `<html><body><p>${words.join(' ')}</p></body></html>`,
     });
@@ -127,7 +127,7 @@ function test(recordExtractor) {
   });
 
   it.describe('page with characters that need escaping', it => {
-    const words = Array.from({ length: 9000 }, (...k) => `"word${k}"`); // each word is surrounded by double quotes. each will be stored as two characters. (\")
+    const words = Array.from({ length: 9000 }, (_v, k) => `"word${k}"`); // each word is surrounded by double quotes. each will be stored as two characters. (\")
     const records = recordExtractor({
       html: `<html><body><p>${words.join(' ')}</p></body></html>`,
     });
