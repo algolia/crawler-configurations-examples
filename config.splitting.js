@@ -19,13 +19,13 @@
 // 1. extracting the text from a given list of elements; (see TEXT_ELEMENTS)
 // 2. and, if needed, splitting the textual content of each matching element
 //    into more than one record, depending on the maximum record size allowed
-//    by your Algolia plan. (see MAX_RECORD_LENGTH)
+//    by your Algolia plan. (see the `maxRecordBytes` property)
 //
 // In order to make sure that every word of that content can be used to match
 // the page, the splitting will happen between words, and whitespace (including
-// line breaks) will be de-duplicated into single spaces. (see WORD_SEPARATOR)
+// line breaks) will be de-duplicated into single spaces.
 //
-// Feel free to change the page metadata (`pageMeta`) that will be included in
+// Feel free to change the page metadata (`baseRecord`) that will be included in
 // all resulting records, based on your needs.
 //
 module.exports = {
