@@ -38,7 +38,6 @@ module.exports = {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id=my-id&password=my-password',
-        followRedirect: false,
         timeout: 5000, // in milliseconds
       },
     },
