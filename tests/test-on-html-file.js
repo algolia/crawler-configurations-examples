@@ -1,24 +1,12 @@
 const fs = require('fs');
 const cheerio = require('cheerio');
 const junit = require('junit');
-const { loadRecordExtractor } = require('./loadRecordExtractor');
+const { loadRecordExtractor, addSeparatorsBetweenChildElements } = require('./loadRecordExtractor');
 
 const USAGE =
   '$ node test-on-html-file.js <name_of_page.html> [<name_of_config.js>]';
 
 const DEFAULT_CONFIG_FILE = '../config.splitting.js';
-
-// adapted from config.splitting.js
-const addSeparatorsBetweenChildElements = ($elem, $) => {
-  const $childNodes = $elem.children();
-  if ($childNodes.length === 0) {
-    $elem.text(($elem.text() || '') + ' ');
-  } else {
-    $childNodes.each(
-      (i, child) => addSeparatorsBetweenChildElements($(child), $) // recurse through the DOM tree, depth first
-    );
-  }
-};
 
 function extractWordsFrom(html) {
   const $ = cheerio.load(html);
@@ -51,7 +39,7 @@ function test(recordExtractor, htmlFile) {
 
     it(`fits 10KB per record`, () =>
       it.eq(
-        records.some(record => JSON.stringify(record).length > 10000),
+        records.some(record => record.text.length > 10000),
         false
       ));
 

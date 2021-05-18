@@ -80,11 +80,11 @@ function test(recordExtractor) {
         true
       ));
 
-    it(`fits 10KB per record`, () =>
+    it(`fits 10KB per record`, () => {
       it.eq(
-        records.some(record => JSON.stringify(record).length > 10000),
+        records.some(record => record.text.length > 10000),
         false
-      ));
+      )});
 
     it(`matches all words`, () =>
       it.eq(
@@ -144,7 +144,7 @@ function test(recordExtractor) {
 
     it(`fits 10KB per record`, () =>
       it.eq(
-        records.some(record => JSON.stringify(record).length > 10000),
+        records.some(record => record.text.length > 10000),
         false
       ));
   });

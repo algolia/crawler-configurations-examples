@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Algolia Inc. All rights reserved.
+ * Copyright 2019-2021 Algolia Inc. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ module.exports = {
   rateLimit: 2,
   actions: [
     {
-      // Extract all paragraphs from the pages
+      // Extract all paragraphs from the pages in separate records
       indexName: 'crawler-example',
       pathsToMatch: ['https://www.example.com/**'],
       fileTypesToMatch: ['html', 'pdf', 'doc'],
@@ -40,8 +40,8 @@ module.exports = {
           )
           .get()
           .filter(paragraph => Boolean(paragraph))
-          .map(paragraph => ({
-            objectID: url.href,
+          .map((paragraph, i) => ({
+            objectID: `${url.href}#${i}`,
             url: url.href,
             fileType,
             paragraph,
@@ -81,7 +81,7 @@ module.exports = {
                   .trim()
               )
               .get()
-              .filter(paragraph => Boolean(paragraph)),
+              .find(paragraph => Boolean(paragraph)),
           },
         ];
       },

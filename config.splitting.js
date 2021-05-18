@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Algolia Inc. All rights reserved.
+ * Copyright 2019-2021 Algolia Inc. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@
 module.exports = {
   actions: [
     {
-      recordExtractor: ({ $, url }) => {
+      recordExtractor: ({ $, url, helpers }) => {
 
         const TEXT_ELEMENTS = ['body']; // selectors of elements to be indexed as Algolia records
         // 👆 Here we are taking the whole document, but you could use any other
@@ -42,20 +42,20 @@ module.exports = {
           // URL
           url: url.href,
           hostname: url.hostname,
-          path: url.pathname.split('/'),
+          path: url.pathname,
           depth: url.pathname.split("/").length - 1,
           // Metadata
           title: $("head title").text().trim(),
           keywords: $("meta[name=keywords]").attr("content"),
           description: $("meta[name=description]").attr("content"),
         };
-        
+
         const records = helpers.splitContentIntoRecords({
           baseRecord,
           $elements: $(TEXT_ELEMENTS.join(', ')),
           maxRecordBytes: 10000,
-          textAttributeName = 'text',
-          orderingAttributeName = 'part',
+          // textAttributeName: 'text',
+          // orderingAttributeName: 'part',
         });
         // (documentation: https://algolia.com/doc/api-reference/crawler/configuration/actions/#parameter-param-splitcontentintorecords)
 
